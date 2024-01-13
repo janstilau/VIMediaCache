@@ -95,6 +95,7 @@
     [self.resourceLoaderManager cancelLoaders];
     
     NSURL *url = [NSURL URLWithString:@"https://mvvideo5.meitudata.com/56ea0e90d6cb2653.mp4"];
+    // 关键的一点, 就是在这里.
     AVPlayerItem *playerItem = [self.resourceLoaderManager playerItemWithURL:url];
     self.playerItem = playerItem;
     

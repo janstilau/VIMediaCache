@@ -1,0 +1,50 @@
+API_AVAILABLE(macos(10.9), ios(7.0), tvos(9.0)) API_UNAVAILABLE(watchos)
+@interface AVAssetResourceLoadingContentInformationRequest : NSObject {
+@private
+    AVAssetResourceLoadingContentInformationRequestInternal *_contentInformationRequest;
+}
+AV_INIT_UNAVAILABLE
+
+/*!
+ @property     contentType
+ @abstract    一个UTI，指示请求资源中包含的数据类型。
+ @discussion  在完成加载AVAssetResourceLoadingRequest之前，如果其contentInformationRequest不为nil，您应将此属性的值设置为指示请求资源中包含的数据类型的UTI。
+*/
+@property (nonatomic, copy, nullable) NSString *contentType;
+
+/*!
+ @property     allowedContentTypes
+ @abstract    一个数组，显示将作为请求资源的有效响应接受的数据类型。
+ @discussion  如果allowedContentTypes非nil且contentType属性不在allowedContentTypes中，则会引发异常。
+*/
+@property (nonatomic, readonly, nullable) NSArray <NSString *> *allowedContentTypes API_AVAILABLE(macos(10.13.2), ios(11.2), tvos(11.2)) API_UNAVAILABLE(watchos);
+
+/*!
+ @property     contentLength
+ @abstract    指示请求资源的长度，以字节为单位。
+ @discussion  在完成加载AVAssetResourceLoadingRequest之前，如果其contentInformationRequest不为nil，您应将此属性的值设置为请求资源包含的字节数。
+*/
+@property (nonatomic) long long contentLength;
+
+/*!
+ @property     byteRangeAccessSupported
+ @abstract    指示是否支持对资源的任意字节范围进行随机访问。这种支持还允许多次请求资源的部分。
+ @discussion  在完成加载AVAssetResourceLoadingRequest之前，如果其contentInformationRequest不为nil，您应将此属性的值设置为YES，以指示是否支持对资源的任意字节范围进行随机访问。如果不为必须逐步加载的资源设置此属性为YES，资源的加载可能会失败。此类资源包括包含媒体数据的任何内容。
+*/
+@property (nonatomic, getter=isByteRangeAccessSupported) BOOL byteRangeAccessSupported;
+
+/*!
+ @property     renewalDate
+ @abstract    对于会过期的资源，指定新的AVAssetResourceLoadingRequest将为此资源的续订在何时发出，如果媒体系统仍然需要它。
+ @discussion  在完成加载AVAssetResourceLoadingRequest之前，如果资源容易过期，您应将此属性的值设置为触发续订的日期。此值应设置得足够早，以允许通过-resourceLoader:shouldWaitForRenewalOfRequestedResource:传递给委托的AVAssetResourceRenewalRequest在实际到期时间之前完成。否则，媒体播放可能会失败。
+ */
+@property (nonatomic, copy, nullable) NSDate *renewalDate API_AVAILABLE(macos(10.10), ios(8.0), tvos(9.0)) API_UNAVAILABLE(watchos);
+
+/*!
+ @property     entireLengthAvailableOnDemand
+ @abstract    指示是否可以期望立即生成资产数据。
+ @discussion  在完成加载AVAssetResourceLoadingRequest之前，如果其contentInformationRequest不为nil，您可以将此属性设置为YES，以指示所有资产数据都可以立即生成，例如，因为数据完全缓存，或因为自定义URL方案最终引用本地存储上的文件。这允许进行重要的数据流优化。为了向后兼容，此属性默认为NO。
+*/
+@property (nonatomic, getter=isEntireLengthAvailableOnDemand) BOOL entireLengthAvailableOnDemand API_AVAILABLE(macos(13.0), ios(16.0), tvos(16.0), watchos(9.0));
+
+@end

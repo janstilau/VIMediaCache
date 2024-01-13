@@ -41,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		063BC2F52B52F2FF005113C1 /* AVAssetResourceLoadingRequestTranslate.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = AVAssetResourceLoadingRequestTranslate.txt; sourceTree = "<group>"; };
+		063BC2F62B52F3CB005113C1 /* AVAssetResourceLoadingContentInformationRequestTranslate.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = AVAssetResourceLoadingContentInformationRequestTranslate.txt; sourceTree = "<group>"; };
 		5F2836B31D96548E000910CA /* VICacheAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VICacheAction.h; sourceTree = "<group>"; };
 		5F2836B41D96548E000910CA /* VICacheAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VICacheAction.m; sourceTree = "<group>"; };
 		5F2836B51D96548E000910CA /* VICacheConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VICacheConfiguration.h; sourceTree = "<group>"; };
@@ -201,6 +203,8 @@
 				5FDCF29D1CEBF26800188E0C /* VIResourceLoaderManager.m */,
 				5FDCF29E1CEBF26800188E0C /* VIResourceLoadingRequestWorker.h */,
 				5FDCF29F1CEBF26800188E0C /* VIResourceLoadingRequestWorker.m */,
+				063BC2F52B52F2FF005113C1 /* AVAssetResourceLoadingRequestTranslate.txt */,
+				063BC2F62B52F3CB005113C1 /* AVAssetResourceLoadingContentInformationRequestTranslate.txt */,
 			);
 			path = ResourceLoader;
 			sourceTree = "<group>";
@@ -267,6 +271,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);

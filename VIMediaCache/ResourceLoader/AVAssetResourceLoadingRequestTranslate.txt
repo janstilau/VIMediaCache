@@ -1,0 +1,74 @@
+API_AVAILABLE(macos(10.9), ios(6.0), tvos(9.0)) API_UNAVAILABLE(watchos)
+@interface AVAssetResourceLoadingRequest : NSObject {
+@private
+    AVAssetResourceLoadingRequestInternal *_loadingRequest;
+}
+AV_INIT_UNAVAILABLE
+
+/*!
+ @property     request
+ @abstract    请求资源的NSURLRequest。
+*/
+@property (nonatomic, readonly) NSURLRequest *request;
+
+/*!
+ @property     finished
+ @abstract    指示资源加载是否已完成。
+ @discussion  该属性的值只有在调用-finishLoading或-finishLoadingWithError:后才变为YES。
+*/
+@property (nonatomic, readonly, getter=isFinished) BOOL finished;
+
+/*!
+ @property     cancelled
+ @abstract    指示请求是否已取消。
+ @discussion  该属性的值在资源加载器取消请求加载之前变为YES，正好在将消息-resourceLoader:didCancelLoadingRequest:发送给其委托之前。
+*/
+@property (nonatomic, readonly, getter=isCancelled) BOOL cancelled API_AVAILABLE(macos(10.9), ios(7.0), tvos(9.0)) API_UNAVAILABLE(watchos);
+
+/*!
+ @property     contentInformationRequest
+ @abstract    一个AVAssetResourceLoadingContentInformationRequest的实例，您应该用有关资源的信息填充它。如果不需要此类信息，则此属性的值将为nil。
+*/
+@property (nonatomic, readonly, nullable) AVAssetResourceLoadingContentInformationRequest *contentInformationRequest API_AVAILABLE(macos(10.9), ios(7.0), tvos(9.0)) API_UNAVAILABLE(watchos);
+
+/*!
+ @property     dataRequest
+ @abstract    一个AVAssetResourceLoadingDataRequest的实例，指示正在请求的资源数据的范围。如果不请求数据，则此属性的值将为nil。
+*/
+@property (nonatomic, readonly, nullable) AVAssetResourceLoadingDataRequest *dataRequest API_AVAILABLE(macos(10.9), ios(7.0), tvos(9.0)) API_UNAVAILABLE(watchos);
+
+/*!
+ @property     response
+ @abstract    将此属性的值设置为NSURLResponse的实例，指示对加载请求的响应。如果不需要响应，则将此属性的值设置为nil。
+*/
+@property (nonatomic, copy, nullable) NSURLResponse *response API_AVAILABLE(macos(10.9), ios(7.0), tvos(9.0)) API_UNAVAILABLE(watchos);
+
+/*!
+ @property     redirect
+ @abstract    将此属性的值设置为NSURLRequest的实例，指示将加载请求重定向到另一个URL。如果不需要重定向，则将此属性的值设置为nil。
+ @discussion  AVAssetResourceLoader仅支持重定向到HTTP URL。重定向到其他URL将导致加载失败。
+*/
+@property (nonatomic, copy, nullable) NSURLRequest *redirect API_AVAILABLE(macos(10.9), ios(7.0), tvos(9.0)) API_UNAVAILABLE(watchos);
+
+/*!
+ @property     requestor
+ @abstract    发起此请求的AVAssetResourceLoadingRequestor。
+ */
+@property (nonatomic, readonly) AVAssetResourceLoadingRequestor *requestor API_AVAILABLE(macos(10.14), ios(12.0), tvos(12.0)) API_UNAVAILABLE(watchos);
+
+/*!
+ @method     finishLoading
+ @abstract    导致接收器将请求的处理视为完成。
+ @discussion  如果存在dataRequest，并且根据dataRequest的requestedOffset和requestedLength属性的值，或者requestsAllDataToEndOfResource的值为YES，资源不包含请求的数据的全部范围，您可以在提供了资源包含的尽可能多的请求数据之后调用-finishLoading。
+*/
+- (void)finishLoading API_AVAILABLE(macos(10.9), ios(7.0), tvos(9.0)) API_UNAVAILABLE(watchos);
+
+/*!
+ @method     finishLoadingWithError:
+ @abstract    导致接收器将请求视为失败。
+ @param        error
+                一个NSError的实例，指示失败的原因。
+*/
+- (void)finishLoadingWithError:(nullable NSError *)error;
+
+@end
