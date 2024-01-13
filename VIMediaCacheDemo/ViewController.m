@@ -43,10 +43,10 @@
     [self cleanCache];
     
     
-//    NSURL *url = [NSURL URLWithString:@"https://mvvideo5.meitudata.com/56ea0e90d6cb2653.mp4"];
-//    VIMediaDownloader *downloader = [[VIMediaDownloader alloc] initWithURL:url];
-//    [downloader downloadFromStartToEnd];
-//    self.downloader = downloader;
+    //    NSURL *url = [NSURL URLWithString:@"https://mvvideo5.meitudata.com/56ea0e90d6cb2653.mp4"];
+    //    VIMediaDownloader *downloader = [[VIMediaDownloader alloc] initWithURL:url];
+    //    [downloader downloadFromStartToEnd];
+    //    self.downloader = downloader;
     
     [self setupPlayer];
     
@@ -106,11 +106,11 @@
 #pragma mark - Setup
 
 - (void)setupPlayer {
-
-//        NSURL *url = [NSURL URLWithString:@"http://gedftnj8mkvfefuaefm.exp.bcevod.com/mda-hc2s2difdjz6c5y9/hd/mda-hc2s2difdjz6c5y9.mp4?playlist%3D%5B%22hd%22%5D&auth_key=1500559192-0-0-dcb501bf19beb0bd4e0f7ad30c380763&bcevod_channel=searchbox_feed&srchid=3ed366b1b0bf70e0&channel_id=2&d_t=2&b_v=9.1.0.0"];
-//        NSURL *url = [NSURL URLWithString:@"https://mvvideo5.meitudata.com/56a9e1389b9706520.mp4"];
-        NSURL *url = [NSURL URLWithString:@"https://mvvideo5.meitudata.com/56ea0e90d6cb2653.mp4"];
-
+    
+    //        NSURL *url = [NSURL URLWithString:@"http://gedftnj8mkvfefuaefm.exp.bcevod.com/mda-hc2s2difdjz6c5y9/hd/mda-hc2s2difdjz6c5y9.mp4?playlist%3D%5B%22hd%22%5D&auth_key=1500559192-0-0-dcb501bf19beb0bd4e0f7ad30c380763&bcevod_channel=searchbox_feed&srchid=3ed366b1b0bf70e0&channel_id=2&d_t=2&b_v=9.1.0.0"];
+    //        NSURL *url = [NSURL URLWithString:@"https://mvvideo5.meitudata.com/56a9e1389b9706520.mp4"];
+    NSURL *url = [NSURL URLWithString:@"https://mvvideo5.meitudata.com/56ea0e90d6cb2653.mp4"];
+    
     VIResourceLoaderManager *resourceLoaderManager = [VIResourceLoaderManager new];
     self.resourceLoaderManager = resourceLoaderManager;
     
@@ -121,9 +121,9 @@
     if (configuration.progress >= 1.0) {
         NSLog(@"cache completed");
     }
-
+    
     AVPlayer *player = [AVPlayer playerWithPlayerItem:playerItem];
-//    AVPlayer *player = [AVPlayer playerWithURL:url];
+    //    AVPlayer *player = [AVPlayer playerWithURL:url];
     player.automaticallyWaitsToMinimizeStalling = NO;
     self.player = player;
     [self.playerView setPlayer:player];
@@ -134,16 +134,16 @@
     [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 10)
                                               queue:dispatch_queue_create("player.time.queue", NULL)
                                          usingBlock:^(CMTime time) {
-                                             dispatch_async(dispatch_get_main_queue(), ^(void) {
-                                                 if (weakSelf.slider.tag == 0) {
-                                                     CGFloat duration = CMTimeGetSeconds(weakSelf.player.currentItem.duration);
-                                                     weakSelf.totalTimeLabel.text = [NSString stringWithFormat:@"%.f", duration];
-                                                     CGFloat currentDuration = CMTimeGetSeconds(time);
-                                                     weakSelf.currentTimeLabel.text = [NSString stringWithFormat:@"%.f", currentDuration];
-                                                     weakSelf.slider.value = currentDuration / duration;
-                                                 }
-                                             });
-                                         }];
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            if (weakSelf.slider.tag == 0) {
+                CGFloat duration = CMTimeGetSeconds(weakSelf.player.currentItem.duration);
+                weakSelf.totalTimeLabel.text = [NSString stringWithFormat:@"%.f", duration];
+                CGFloat currentDuration = CMTimeGetSeconds(time);
+                weakSelf.currentTimeLabel.text = [NSString stringWithFormat:@"%.f", currentDuration];
+                weakSelf.slider.value = currentDuration / duration;
+            }
+        });
+    }];
     
     [self.playerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
     [self.player addObserver:self forKeyPath:@"timeControlStatus" options:NSKeyValueObservingOptionNew context:nil];
