@@ -17,6 +17,7 @@
 
 #pragma mark - Class: VIURLSessionDelegateObject
 
+// 没有太大意义的再次封装.
 @protocol  VIURLSessionDelegateObjectDelegate <NSObject>
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler;
@@ -97,6 +98,8 @@ didCompleteWithError:(nullable NSError *)error {
 
 @class VIActionWorker;
 
+// ActionWorker 的 Delegate 其实根本不管到底是文件系统获取到的, 还是在网络获取到的.
+// 这都是 ActionWorker 的实现细节. 
 @protocol VIActionWorkerDelegate <NSObject>
 
 - (void)actionWorker:(VIActionWorker *)actionWorker didReceiveResponse:(NSURLResponse *)response;

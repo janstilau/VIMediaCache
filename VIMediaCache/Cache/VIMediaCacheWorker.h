@@ -19,8 +19,8 @@
 @property (nonatomic, strong, readonly) NSError *setupError; // Create fileHandler error, can't save/use cache
 
 - (void)cacheData:(NSData *)data forRange:(NSRange)range error:(NSError **)error;
-- (NSArray<VICacheAction *> *)cachedDataActionsForRange:(NSRange)range;
 - (NSData *)cachedDataForRange:(NSRange)range error:(NSError **)error;
+- (NSArray<VICacheAction *> *)cachedDataActionsForRange:(NSRange)range;
 
 - (void)setContentInfo:(VIContentInfo *)contentInfo error:(NSError **)error;
 

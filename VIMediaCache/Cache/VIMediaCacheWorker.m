@@ -1,11 +1,3 @@
-//
-//  VIMediaCacheWorker.m
-//  VIMediaCacheDemo
-//
-//  Created by Vito on 4/21/16.
-//  Copyright © 2016 Vito. All rights reserved.
-//
-
 #import "VIMediaCacheWorker.h"
 #import "VICacheAction.h"
 #import "VICacheManager.h"
@@ -80,12 +72,15 @@ static NSString *VIMediaCacheErrorDoamin = @"com.vimediacache";
 
 // 这个时候, writeFileHandle 已经和最终视频的文件大小一致了.
 // 所以使用文件 seek 然后进行覆盖是没有问题的.
-- (void)cacheData:(NSData *)data forRange:(NSRange)range error:(NSError **)error {
+- (void)cacheData:(NSData *)data
+         forRange:(NSRange)range error:(NSError **)error {
     @synchronized(self.writeFileHandle) {
         @try {
             [self.writeFileHandle seekToFileOffset:range.location];
             [self.writeFileHandle writeData:data];
             self.writeBytes += data.length;
+            
+            // 文件的修改, 和 JSON 的修改是同步的. 所以这里其实是由两份数据. config 里面, 存储了当前的已经缓存了的信息.
             [self.internalCacheConfiguration addCacheFragment:range];
         } @catch (NSException *exception) {
             NSLog(@"write to file error");
@@ -94,8 +89,10 @@ static NSString *VIMediaCacheErrorDoamin = @"com.vimediacache";
     }
 }
 
-// 直接到对应的文件路径中, 找到对应的 range, 进行读取.
-- (NSData *)cachedDataForRange:(NSRange)range error:(NSError **)error {
+// 这里的 range, 一定是在 config 类里面读取出来的.
+// 否则, 按照这个类的设计, 是不会或者不应该直接到文件里面读取数据的.
+- (NSData *)cachedDataForRange:(NSRange)range
+                         error:(NSError **)error {
     @synchronized(self.readFileHandle) {
         @try {
             [self.readFileHandle seekToFileOffset:range.location];
@@ -109,7 +106,11 @@ static NSString *VIMediaCacheErrorDoamin = @"com.vimediacache";
     return nil;
 }
 
-// 这里就是从已缓存的数据中, 和 range 做比较. 切割出 remote, local 的各个 segment
+/*
+ 这个类的核心功能, 根据已经缓存了的数据, 将 range 分割为需要网络下载的部分, 以及已经缓存了的部分
+ 返回的 action, 直接是通过文件读取数据, 或者需要触发网络下载.
+ 所以得操作, 都是异步的.
+ */
 - (NSArray<VICacheAction *> *)cachedDataActionsForRange:(NSRange)range {
     NSArray *cachedFragments = [self.internalCacheConfiguration cacheFragments];
     NSMutableArray *actions = [NSMutableArray array];
@@ -191,6 +192,7 @@ static NSString *VIMediaCacheErrorDoamin = @"com.vimediacache";
 - (void)setContentInfo:(VIContentInfo *)contentInfo error:(NSError **)error {
     self.internalCacheConfiguration.contentInfo = contentInfo;
     @try {
+        // 这个类库的问题可能就是在这里, 缓存的文件, 还没有下载, 就扩张到了那个大小了.
         [self.writeFileHandle truncateFileAtOffset:contentInfo.contentLength];
         [self.writeFileHandle synchronizeFile];
     } @catch (NSException *exception) {
@@ -201,6 +203,17 @@ static NSString *VIMediaCacheErrorDoamin = @"com.vimediacache";
 
 - (void)save {
     @synchronized (self.writeFileHandle) {
+        /*
+         Summary
+
+         Causes all in-memory data and attributes of the file represented by the handle to write to permanent storage.
+
+         - (void)synchronizeFile;
+
+         Programs that require the file to always be in a known state should call this method. An invocation of this method doesn’t return until memory is flushed.
+         Important
+         This method raises NSFileHandleOperationException if called on a file handle representing a pipe or socket, if the file descriptor is closed, or if the operation failed.
+         */
         [self.writeFileHandle synchronizeFile];
         [self.internalCacheConfiguration save];
     }
