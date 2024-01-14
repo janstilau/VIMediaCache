@@ -88,6 +88,7 @@
 }
 
 - (void)mediaDownloader:(VIMediaDownloader *)downloader didReceiveData:(NSData *)data {
+    // 加载到数据了, 直接使用 self.request.dataRequest 通知给外界. 
     [self.request.dataRequest respondWithData:data];
 }
 

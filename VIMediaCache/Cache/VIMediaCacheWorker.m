@@ -78,6 +78,8 @@ static NSString *VIMediaCacheErrorDoamin = @"com.vimediacache";
     return self.internalCacheConfiguration;
 }
 
+// 这个时候, writeFileHandle 已经和最终视频的文件大小一致了.
+// 所以使用文件 seek 然后进行覆盖是没有问题的.
 - (void)cacheData:(NSData *)data forRange:(NSRange)range error:(NSError **)error {
     @synchronized(self.writeFileHandle) {
         @try {
@@ -92,6 +94,7 @@ static NSString *VIMediaCacheErrorDoamin = @"com.vimediacache";
     }
 }
 
+// 直接到对应的文件路径中, 找到对应的 range, 进行读取.
 - (NSData *)cachedDataForRange:(NSRange)range error:(NSError **)error {
     @synchronized(self.readFileHandle) {
         @try {
@@ -106,6 +109,7 @@ static NSString *VIMediaCacheErrorDoamin = @"com.vimediacache";
     return nil;
 }
 
+// 这里就是从已缓存的数据中, 和 range 做比较. 切割出 remote, local 的各个 segment
 - (NSArray<VICacheAction *> *)cachedDataActionsForRange:(NSRange)range {
     NSArray *cachedFragments = [self.internalCacheConfiguration cacheFragments];
     NSMutableArray *actions = [NSMutableArray array];

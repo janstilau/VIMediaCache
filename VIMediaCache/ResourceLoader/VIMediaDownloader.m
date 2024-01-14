@@ -28,6 +28,7 @@
 
 static NSInteger kBufferSize = 10 * 1024;
 
+// AFN Delegate
 @interface VIURLSessionDelegateObject : NSObject <NSURLSessionDelegate>
 
 - (instancetype)initWithDelegate:(id<VIURLSessionDelegateObjectDelegate>)delegate;
@@ -57,9 +58,11 @@ static NSInteger kBufferSize = 10 * 1024;
           dataTask:(NSURLSessionDataTask *)dataTask
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
+    
     [self.delegate URLSession:session dataTask:dataTask didReceiveResponse:response completionHandler:completionHandler];
 }
 
+// 这里有一个缓存的过程, 到达了 kBufferSize 之后, 才会把数据向上传递.
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data {
@@ -187,6 +190,7 @@ didCompleteWithError:(nullable NSError *)error {
         return;
     }
     
+    // 如果是本地的数据, 那么就从本地进行取值.
     if (action.actionType == VICacheAtionTypeLocal) {
         NSError *error;
         NSData *data = [self.cacheWorker cachedDataForRange:action.range error:&error];
@@ -279,6 +283,8 @@ didCompleteWithError:(nullable NSError *)error {
 didReceiveResponse:(NSURLResponse *)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {
     NSString *mimeType = response.MIMEType;
+    NSLog(@"response ---- %@", response);
+    
     // Only download video/audio data
     if ([mimeType rangeOfString:@"video/"].location == NSNotFound &&
         [mimeType rangeOfString:@"audio/"].location == NSNotFound &&

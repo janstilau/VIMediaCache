@@ -65,9 +65,16 @@ static NSString *kCacheScheme = @"VIMediaCache:";
  由于 AVPlayer 会触发分片下载的策略，request 请求会从 dataRequest 中获取请求的分片范围。
  因此，根据请求地址和请求分片，我们就可以创建自定义的网络请求。请求分片需要在 HTTP Header 中进行设置。
  */
+/*
+ 只有第一次 info 有值了, 后面的都是 null
+ 
+ */
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader
     shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest  {
     NSURL *resourceURL = [loadingRequest.request URL];
+    NSLog(@"info ----- %@", loadingRequest.contentInformationRequest);
+    NSLog(@"data ----- %@", loadingRequest.dataRequest);
+    
     // 这里有一个懒加载的机制在. 
     if ([resourceURL.absoluteString hasPrefix:kCacheScheme]) {
         VIResourceLoader *loader = [self loaderForRequest:loadingRequest];

@@ -103,8 +103,9 @@ NSString * const MCResourceLoaderErrorDomain = @"LSFilePlayerResourceLoaderError
 
 - (void)startWorkerWithRequest:(AVAssetResourceLoadingRequest *)request {
     [[VIMediaDownloaderStatus shared] addURL:self.url];
-    VIResourceLoadingRequestWorker *requestWorker = [[VIResourceLoadingRequestWorker alloc] initWithMediaDownloader:self.mediaDownloader
-                                                                                             resourceLoadingRequest:request];
+    VIResourceLoadingRequestWorker *requestWorker =
+    [[VIResourceLoadingRequestWorker alloc] initWithMediaDownloader:self.mediaDownloader
+                                             resourceLoadingRequest:request];
     [self.pendingRequestWorkers addObject:requestWorker];
     requestWorker.delegate = self;
     [requestWorker startWork];

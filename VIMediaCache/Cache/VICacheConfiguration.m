@@ -29,6 +29,7 @@ static NSString *kURLKey = @"kURLKey";
 
 + (instancetype)configurationWithFilePath:(NSString *)filePath {
     filePath = [self configurationFilePathForFilePath:filePath];
+    // 按照文件存储的, 每一个文件, 都是使用的自己的文件路径, 
     VICacheConfiguration *configuration = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
     
     if (!configuration) {
